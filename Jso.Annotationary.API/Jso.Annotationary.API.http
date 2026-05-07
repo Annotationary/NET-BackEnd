@@ -1,0 +1,6 @@
+@Jso.Annotationary.API_HostAddress = http://localhost:5133
+
+GET {{Jso.Annotationary.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
