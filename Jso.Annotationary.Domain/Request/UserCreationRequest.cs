@@ -9,9 +9,7 @@ namespace Jso.Annotationary.Domain.Request
 {
     public class UserCreationRequest
     {
-        public UserCreationRequest()
-        {
-            public string Username { get; set; }
-        }
+        public string Username { get; set; }
+    
     }
 }
