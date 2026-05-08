@@ -10,12 +10,11 @@ namespace Jso.Annotationary.Infrastructure.Context
 {
     public class AnnotationaryDbContext : DbContext
     {
-        public AnnotationaryDbContext(DbContextOptions<AnnotationaryDbContext> options) : base(options)
-        {
+        public AnnotationaryDbContext(DbContextOptions<AnnotationaryDbContext> options) : base(options) { }
 
-        }
-
-        public DbSet<User> Users { get; set; }
+        public DbSet<User> Users => Set<User>();
+        public DbSet<Project> Projects => Set<Project>();
+        public DbSet<ProjectMember> ProjectMembers => Set<ProjectMember>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

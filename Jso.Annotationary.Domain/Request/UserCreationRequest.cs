@@ -10,6 +10,5 @@ namespace Jso.Annotationary.Domain.Request
     public class UserCreationRequest
     {
         public string Username { get; set; }
-    
     }
 }

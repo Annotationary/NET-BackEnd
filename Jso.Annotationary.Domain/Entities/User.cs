@@ -32,5 +32,9 @@ namespace Jso.Annotationary.Domain.Entities
         public UserRole UserRole { get; set; } = UserRole.ANNOTATOR;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public ICollection<Project> Projects { get; set; } = new List<Project>();
+
+        public ICollection<ProjectMember> ProjectMembers { get; set; } = new List<ProjectMember>();
     }
 }

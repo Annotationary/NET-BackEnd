@@ -19,10 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Jso.Annotationary.Infrastructure\Jso.Annotationary.Infrastructure.csproj" />
   </ItemGroup>
 
