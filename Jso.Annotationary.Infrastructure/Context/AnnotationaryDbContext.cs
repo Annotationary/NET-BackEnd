@@ -19,6 +19,7 @@ namespace Jso.Annotationary.Infrastructure.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AnnotationaryDbContext).Assembly);
         }
     }
 }

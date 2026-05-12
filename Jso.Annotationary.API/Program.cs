@@ -1,4 +1,6 @@
 
+using Jso.Annotationary.Application.Common;
+using Jso.Annotationary.Infrastructure.Common;
 using Jso.Annotationary.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -42,12 +44,8 @@ namespace Jso.Annotationary.API
                     });
             });
 
-            // DbConext injection
-            var connectionString = builder.Configuration.GetConnectionString("Default");
-            var serverVersion = ServerVersion.AutoDetect(connectionString);
-
-            builder.Services.AddDbContext<AnnotationaryDbContext>(options =>
-                options.UseMySql(connectionString, serverVersion));
+            builder.Services.AddInfrastructure(builder.Configuration);
+            builder.Services.AddApplication();
 
             // Middleware pipeline
             var app = builder.Build();
@@ -61,8 +59,12 @@ namespace Jso.Annotationary.API
                     options.RoutePrefix = string.Empty; // mở thẳng tại root "/"
                 });
             }
+            
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseHttpsRedirection();
+            }
 
-            app.UseHttpsRedirection();
             app.UseCors("AllowVite");
             app.UseAuthorization();
             app.MapControllers();

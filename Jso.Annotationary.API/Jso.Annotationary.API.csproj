@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Jso.Annotationary.Application\Jso.Annotationary.Application.csproj" />
     <ProjectReference Include="..\Jso.Annotationary.Infrastructure\Jso.Annotationary.Infrastructure.csproj" />
   </ItemGroup>
 
