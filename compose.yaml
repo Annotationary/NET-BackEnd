@@ -1,0 +1,11 @@
+﻿services:
+  jso.annotationary.api:
+    image: jso.annotationary.api
+    build:
+      context: .
+      dockerfile: Jso.Annotationary.API/Dockerfile
+    ports:
+      - "32770:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+

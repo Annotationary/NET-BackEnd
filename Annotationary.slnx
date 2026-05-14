@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="compose.yaml" />
+  </Folder>
   <Project Path="Jso.Annotationary.API/Jso.Annotationary.API.csproj" />
   <Project Path="Jso.Annotationary.Application/Jso.Annotationary.Application.csproj" />
   <Project Path="Jso.Annotationary.Domain/Jso.Annotationary.Domain.csproj" />

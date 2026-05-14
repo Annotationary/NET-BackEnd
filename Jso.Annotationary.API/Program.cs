@@ -60,10 +60,10 @@ namespace Jso.Annotationary.API
                 });
             }
             
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseHttpsRedirection();
-            }
+            // if (!app.Environment.IsDevelopment())
+            // {
+            //     app.UseHttpsRedirection();
+            // }
 
             app.UseCors("AllowVite");
             app.UseAuthorization();
