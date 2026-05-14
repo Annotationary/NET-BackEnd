@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Jso.Annotationary.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddUserAndProject : Migration
+    public partial class AddUserTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -75,21 +75,20 @@ namespace Jso.Annotationary.Infrastructure.Migrations
                 {
                     ProjectMemberId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     UserId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    ProjectId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    ProjectId1 = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    ProjectId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProjectMembers", x => x.ProjectMemberId);
                     table.ForeignKey(
-                        name: "FK_ProjectMembers_Projects_ProjectId1",
-                        column: x => x.ProjectId1,
+                        name: "FK_ProjectMembers_Projects_ProjectId",
+                        column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "ProjectId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProjectMembers_Users_ProjectId",
-                        column: x => x.ProjectId,
+                        name: "FK_ProjectMembers_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
@@ -100,11 +99,6 @@ namespace Jso.Annotationary.Infrastructure.Migrations
                 name: "IX_ProjectMembers_ProjectId",
                 table: "ProjectMembers",
                 column: "ProjectId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProjectMembers_ProjectId1",
-                table: "ProjectMembers",
-                column: "ProjectId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectMembers_UserId_ProjectId",

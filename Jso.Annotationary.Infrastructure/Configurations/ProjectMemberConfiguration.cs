@@ -1,11 +1,6 @@
 ﻿using Jso.Annotationary.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jso.Annotationary.Infrastructure.Configurations
 {
@@ -26,7 +21,7 @@ namespace Jso.Annotationary.Infrastructure.Configurations
                 .OnDelete(DeleteBehavior.Cascade);
 
             // ProjectMember has one Project, with many ProjectMembers
-            builder.HasOne(pm => pm.User)
+            builder.HasOne(pm => pm.Project)
                 .WithMany(p => p.ProjectMembers)
                 .HasForeignKey(pm => pm.ProjectId)
                 .OnDelete(DeleteBehavior.Cascade);

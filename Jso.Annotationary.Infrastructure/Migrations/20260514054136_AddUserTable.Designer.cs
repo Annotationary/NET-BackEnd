@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Jso.Annotationary.Infrastructure.Migrations
 {
     [DbContext(typeof(AnnotationaryDbContext))]
-    [Migration("20260509133249_AddUserAndProject")]
-    partial class AddUserAndProject
+    [Migration("20260514054136_AddUserTable")]
+    partial class AddUserTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,17 +65,12 @@ namespace Jso.Annotationary.Infrastructure.Migrations
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("ProjectId1")
-                        .HasColumnType("char(36)");
-
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
 
                     b.HasKey("ProjectMemberId");
 
                     b.HasIndex("ProjectId");
-
-                    b.HasIndex("ProjectId1");
 
                     b.HasIndex("UserId", "ProjectId")
                         .IsUnique();
@@ -150,15 +145,15 @@ namespace Jso.Annotationary.Infrastructure.Migrations
 
             modelBuilder.Entity("Jso.Annotationary.Domain.Entities.ProjectMember", b =>
                 {
-                    b.HasOne("Jso.Annotationary.Domain.Entities.User", "User")
+                    b.HasOne("Jso.Annotationary.Domain.Entities.Project", "Project")
                         .WithMany("ProjectMembers")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Jso.Annotationary.Domain.Entities.Project", "Project")
+                    b.HasOne("Jso.Annotationary.Domain.Entities.User", "User")
                         .WithMany("ProjectMembers")
-                        .HasForeignKey("ProjectId1")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
