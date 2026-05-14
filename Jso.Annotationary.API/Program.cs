@@ -1,4 +1,5 @@
 
+using Jso.Annotationary.API.Middleware;
 using Jso.Annotationary.Application.Common;
 using Jso.Annotationary.Infrastructure.Common;
 using Jso.Annotationary.Infrastructure.Context;
@@ -49,6 +50,9 @@ namespace Jso.Annotationary.API
 
             // Middleware pipeline
             var app = builder.Build();
+            
+            app.UseMiddleware<GlobalExceptionMiddleware>();
+            
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

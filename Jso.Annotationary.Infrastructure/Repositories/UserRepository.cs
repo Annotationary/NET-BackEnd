@@ -2,11 +2,6 @@
 using Jso.Annotationary.Domain.Interfaces;
 using Jso.Annotationary.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jso.Annotationary.Infrastructure.Repositories
 {
@@ -56,6 +51,12 @@ namespace Jso.Annotationary.Infrastructure.Repositories
         {
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
+        }
+        
+        public async Task<bool> CheckEmailExistsAsync(string email)
+        {
+            return await _context.Users
+                .AnyAsync(u => u.Email == email);
         }
     }
 }

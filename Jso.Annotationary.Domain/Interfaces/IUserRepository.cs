@@ -15,5 +15,6 @@ namespace Jso.Annotationary.Domain.Interfaces
         Task AddAsync(User user);
         Task UpdateAsync(User user);
         Task DeleteAsync(Guid id);
+        Task<bool> CheckEmailExistsAsync(string email);
     }
 }

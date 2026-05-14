@@ -1,9 +1,6 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Jso.Annotationary.Domain.Entities;
+using Jso.Annotationary.Domain.Response;
+using MediatR;
 
 namespace Jso.Annotationary.Application.Users.Commands
 {
@@ -14,5 +11,5 @@ namespace Jso.Annotationary.Application.Users.Commands
         string? AvatarUrl,
         string? CoverImageUrl,
         string? Specialization
-    ) : IRequest<Guid> ;
+    ) : IRequest<Result<User>> ;
 }
