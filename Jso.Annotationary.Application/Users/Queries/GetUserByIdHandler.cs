@@ -7,10 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Jso.Annotationary.Domain.Response;
 
 namespace Jso.Annotationary.Application.Users.Queries
 {
-    public class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, UserDto?>
+    public class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, Result<UserDto?>>
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
@@ -21,10 +22,17 @@ namespace Jso.Annotationary.Application.Users.Queries
             _mapper = mapper;
         }
 
-        public async Task<UserDto?> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<UserDto?>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
             var user = await _userRepository.GetByIdAsync(request.UserId);
-            return user == null ? null : _mapper.Map<UserDto>(user);
+            var mappedUser = _mapper.Map<UserDto>(user);
+
+            if (user == null)
+            {
+                return null;
+            }
+            
+            return Result<UserDto?>.Success(mappedUser);
         }
     }
 }

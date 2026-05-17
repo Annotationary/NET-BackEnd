@@ -1,4 +1,5 @@
 ﻿using Jso.Annotationary.Application.Users.Commands;
+using Jso.Annotationary.Application.Users.DTOs;
 using Jso.Annotationary.Application.Users.Queries;
 using Jso.Annotationary.Domain.Entities;
 using Jso.Annotationary.Domain.Response;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Jso.Annotationary.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -18,7 +19,9 @@ namespace Jso.Annotationary.API.Controllers
             _mediator = mediator;
         }
 
-        /// <summary> Create a new user. </summary>
+        /// <summary>
+        /// Create a new user.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
         {
@@ -49,21 +52,55 @@ namespace Jso.Annotationary.API.Controllers
                 );
         }
 
-        /// <summary> Get user details with projects. </summary>
+        /// <summary>
+        /// Get user details with projects.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
             var result = await _mediator.Send(new GetAllUserQuery());
-            return Ok(result);
+            
+            if (result.IsFailure)
+            {
+                return BadRequest(ApiResponse<List<UserDto>>.Failure(
+                    new List<string> {result.Error.Message},
+                    "Cannot get all users",
+                    400
+                    ));
+            }
+
+            var response = ApiResponse<List<UserDto>>.Success(
+                result.Value,
+                "Users retrieved successfully",
+                200
+                );
+            
+            return Ok(response);
         }
 
-        /// <summary> Get user by userid. </summary>
+        /// <summary>
+        /// Get user by userid.
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(Guid id)
         {
             var result = await _mediator.Send(new GetUserByIdQuery(id));
-            if (result is null) return NotFound();
-            return Ok(result);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(ApiResponse<UserDto>.Failure(
+                    new List<string> {result.Error.Message},
+                    "Cannot get user by id",
+                    400
+                ));
+            }
+
+            var response = ApiResponse<UserDto?>.Success(
+                result.Value,
+                "User retrieved successfully",
+                200
+                );
+            return Ok(response);
         }
     }
 }

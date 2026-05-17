@@ -1,10 +1,6 @@
 ﻿using Jso.Annotationary.Application.Users.DTOs;
+using Jso.Annotationary.Domain.Response;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jso.Annotationary.Application.Users.Queries;
-public record GetUserByIdQuery(Guid UserId) : IRequest<UserDto?>;
+public record GetUserByIdQuery(Guid UserId) : IRequest<Result<UserDto?>>;
