@@ -1,9 +1,11 @@
 ﻿services:
-  jso.annotationary.api:
+  annotationary.api:
     image: jso.annotationary.api
     build:
       context: .
       dockerfile: Jso.Annotationary.API/Dockerfile
+    dns: 
+      - "10.0.1.91"
     ports:
       - "32770:8080"
     environment:
