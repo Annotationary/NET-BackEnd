@@ -1,4 +1,5 @@
 ﻿using Jso.Annotationary.Domain.Entities;
+using Jso.Annotationary.Domain.Enums;
 using Jso.Annotationary.Domain.Interfaces;
 using Jso.Annotationary.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
@@ -57,6 +58,13 @@ namespace Jso.Annotationary.Infrastructure.Repositories
         {
             return await _context.Users
                 .AnyAsync(u => u.Email == email);
+        }
+
+        public async Task<bool> CheckIsUserActiveAsync(Guid userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+
+            return user != null && user.UserStatus == UserStatus.Active;
         }
     }
 }

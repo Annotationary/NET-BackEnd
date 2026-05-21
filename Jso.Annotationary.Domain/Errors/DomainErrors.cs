@@ -14,6 +14,10 @@ public static class DomainErrors
         public static readonly Error NotFound = new(
             "User.NotFound", 
             "Cannot find this user in system.");
+
+        public static readonly Error UserInActive = new(
+            "User.UserInActive",
+            "User has been active in the system.");
     }
 
     // All project error define here

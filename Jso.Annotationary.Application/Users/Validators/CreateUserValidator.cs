@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Jso.Annotationary.Application.Users.Commands.CreateUser;
 
 namespace Jso.Annotationary.Application.Users.Validators
 {

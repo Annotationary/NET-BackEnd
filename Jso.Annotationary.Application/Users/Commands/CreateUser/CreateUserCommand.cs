@@ -2,7 +2,7 @@
 using Jso.Annotationary.Domain.Response;
 using MediatR;
 
-namespace Jso.Annotationary.Application.Users.Commands
+namespace Jso.Annotationary.Application.Users.Commands.CreateUser
 {
     public record CreateUserCommand(
         string UserName,

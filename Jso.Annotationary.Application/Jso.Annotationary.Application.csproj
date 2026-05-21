@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <Folder Include="Projects\" />
+    <Folder Include="Users\Commands\DeleteUser\" />
   </ItemGroup>
 
   <ItemGroup>

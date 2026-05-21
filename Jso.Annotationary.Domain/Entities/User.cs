@@ -1,10 +1,5 @@
 ﻿using Jso.Annotationary.Domain.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jso.Annotationary.Domain.Entities
 {

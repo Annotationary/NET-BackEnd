@@ -1,4 +1,5 @@
-﻿using Jso.Annotationary.Application.Users.Commands;
+﻿using Jso.Annotationary.Application.Users.Commands.CreateUser;
+using Jso.Annotationary.Application.Users.Commands.UpdateUser;
 using Jso.Annotationary.Application.Users.DTOs;
 using Jso.Annotationary.Application.Users.Queries;
 using Jso.Annotationary.Domain.Entities;
@@ -101,6 +102,36 @@ namespace Jso.Annotationary.API.Controllers
                 200
                 );
             return Ok(response);
+        }
+
+        /// <summary>
+        /// Update user details
+        /// </summary>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UpdateUserCommand command)
+        {
+            // Use the 'with' keyword to create a copy of the command, but with the ID from the URL
+            var commandWithId = command with { UserId = id};
+            
+            var result = await _mediator.Send(commandWithId);
+
+            if (result.IsFailure)
+            {
+                var errorResponse = ApiResponse<UserDto>.Failure(
+                    new List<string> {result.Error.Message},
+                    "Cannot update user details",
+                    400
+                    );
+                return BadRequest(errorResponse);
+            }
+
+            var successResponse = ApiResponse<User>.Success(
+                result.Value,
+                "Update user successfully",
+                201
+                );
+
+            return Ok(successResponse);
         }
     }
 }
