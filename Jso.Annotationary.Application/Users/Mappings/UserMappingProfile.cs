@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Jso.Annotationary.Application.Users.Commands.CreateUser;
 using Jso.Annotationary.Application.Users.Commands.UpdateUser;
 using Jso.Annotationary.Application.Users.DTOs;
 using Jso.Annotationary.Domain.Entities;
@@ -15,6 +16,15 @@ namespace Jso.Annotationary.Application.Users.Mappings
                     opt => opt.MapFrom(scr => scr.UserStatus.ToString()))
                 .ForMember(dest => dest.UserRole, 
                     opt => opt.MapFrom(scr => scr.UserRole.ToString()));
+            
+            // Create Command -> Entity
+            CreateMap<CreateUserCommand, User>()
+                .ForMember(dest => dest.UserId,
+                    opt => opt.Ignore())
+                .ForMember(dest => dest.UserStatus,
+                    opt => opt.Ignore())
+                .ForMember(dest => dest.UserRole,
+                    opt => opt.Ignore());
             
             // Update Command -> Entity
             CreateMap<UpdateUserCommand, User>()
