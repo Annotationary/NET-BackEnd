@@ -10,6 +10,7 @@ public class GlobalExceptionMiddleware
     {
         _next = next;
     }
+    
     public async Task InvokeAsync(HttpContext context)
     {
         try
@@ -23,6 +24,7 @@ public class GlobalExceptionMiddleware
             await HandleExceptionAsync(context, ex);
         }
     }
+    
     private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         context.Response.ContentType = "application/json";

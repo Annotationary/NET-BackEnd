@@ -1,6 +1,10 @@
 
 using Jso.Annotationary.API.Middleware;
+using Jso.Annotationary.Application.Interfaces;
+using Jso.Annotationary.Application.Services;
+using Jso.Annotationary.Domain.Interfaces;
 using Jso.Annotationary.Infrastructure.Context;
+using Jso.Annotationary.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -27,9 +31,7 @@ namespace Jso.Annotationary.API
                     )
                 );
             
-            // Dependency Injection
-            builder.Services.AddScoped<AnnotationaryDbContext>();
-
+            // Swagger
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options => {
@@ -40,7 +42,7 @@ namespace Jso.Annotationary.API
                     Description = "Clean Architecture API"
                 });
             });
-
+            
             // CORS
             builder.Services.AddCors(options =>
             {
@@ -51,14 +53,25 @@ namespace Jso.Annotationary.API
                                 "http://localhost:5173",
                                 "http://localhost:3000",
                                 "http://localhost:5174"
-                              )
-                              .AllowAnyMethod()
-                              .AllowAnyHeader()
-                              .AllowCredentials();
+                            )
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials();
                     });
             });
+            
+            // Dependency Injection
+            builder.Services.AddScoped<AnnotationaryDbContext>();
+            
+            // Register services
+            builder.Services.AddScoped<IUserService, UserService>();
+            
+            // Register repositories
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+            // =============================
             // Middleware pipeline
+            // =============================
             var app = builder.Build();
             
             app.UseMiddleware<GlobalExceptionMiddleware>();
