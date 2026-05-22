@@ -1,10 +1,4 @@
-﻿using Jso.Annotationary.Application.Users.Commands.CreateUser;
-using Jso.Annotationary.Application.Users.Commands.UpdateUser;
-using Jso.Annotationary.Application.Users.DTOs;
-using Jso.Annotationary.Application.Users.Queries;
-using Jso.Annotationary.Domain.Entities;
-using Jso.Annotationary.Domain.Response;
-using MediatR;
+﻿using Jso.Annotationary.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Jso.Annotationary.API.Controllers
@@ -13,125 +7,18 @@ namespace Jso.Annotationary.API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IMediator _mediator;
+        private readonly IUserService _userService;
 
-        public UserController(IMediator mediator)
+        public UserController(IUserService userService)
         {
-            _mediator = mediator;
+            _userService = userService;
         }
 
-        /// <summary>
-        /// Create a new user.
-        /// </summary>
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
-        {
-            var result = await _mediator.Send(command);
-
-            // Fail
-            if (result.IsFailure)
-            {
-                var errorResponse = ApiResponse<User>.Failure(
-                    new List<string>() {result.Error.Message},
-                    "Cannot create user",
-                    400
-                    );
-                return BadRequest(errorResponse);
-            }
-            
-            // Success
-            var successResponse = ApiResponse<User>.Success(
-                result.Value,
-                "User created successfully",
-                201
-                );
-
-            return CreatedAtAction(
-                nameof(GetAllUsers), 
-                new { id= result.Value }, 
-                successResponse
-                );
-        }
-
-        /// <summary>
-        /// Get user details with projects.
-        /// </summary>
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAll()
         {
-            var result = await _mediator.Send(new GetAllUserQuery());
-            
-            if (result.IsFailure)
-            {
-                return BadRequest(ApiResponse<List<UserDto>>.Failure(
-                    new List<string> {result.Error.Message},
-                    "Cannot get all users",
-                    400
-                    ));
-            }
-
-            var response = ApiResponse<List<UserDto>>.Success(
-                result.Value,
-                "Users retrieved successfully",
-                200
-                );
-            
-            return Ok(response);
-        }
-
-        /// <summary>
-        /// Get user by userid.
-        /// </summary>
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserById(Guid id)
-        {
-            var result = await _mediator.Send(new GetUserByIdQuery(id));
-
-            if (result.IsFailure)
-            {
-                return BadRequest(ApiResponse<UserDto>.Failure(
-                    new List<string> {result.Error.Message},
-                    "Cannot get user by id",
-                    400
-                ));
-            }
-
-            var response = ApiResponse<UserDto?>.Success(
-                result.Value,
-                "User retrieved successfully",
-                200
-                );
-            return Ok(response);
-        }
-
-        /// <summary>
-        /// Update user details
-        /// </summary>
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UpdateUserCommand command)
-        {
-            // Use the 'with' keyword to create a copy of the command, but with the ID from the URL
-            var commandWithId = command with { UserId = id};
-            
-            var result = await _mediator.Send(commandWithId);
-
-            if (result.IsFailure)
-            {
-                var errorResponse = ApiResponse<UserDto>.Failure(
-                    new List<string> {result.Error.Message},
-                    "Cannot update user details",
-                    400
-                    );
-                return BadRequest(errorResponse);
-            }
-
-            var successResponse = ApiResponse<User>.Success(
-                result.Value,
-                "Update user successfully",
-                201
-                );
-
-            return Ok(successResponse);
+            var users = await _userService.GetAllAsync();
+            return Ok(users);
         }
     }
 }

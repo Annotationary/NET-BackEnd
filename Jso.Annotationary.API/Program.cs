@@ -1,7 +1,5 @@
 
 using Jso.Annotationary.API.Middleware;
-using Jso.Annotationary.Application.Common;
-using Jso.Annotationary.Infrastructure.Common;
 using Jso.Annotationary.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -13,9 +11,24 @@ namespace Jso.Annotationary.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
+            
+            // =============================
+            // Services configuration
+            // =============================
             builder.Services.AddControllers();
+            
+            // DbContext
+            builder.Services.AddDbContext<AnnotationaryDbContext>(options => 
+                options.UseMySql(
+                    builder.Configuration.GetConnectionString("Default"),
+                    ServerVersion.AutoDetect(
+                        builder.Configuration.GetConnectionString("Default")
+                        )
+                    )
+                );
+            
+            // Dependency Injection
+            builder.Services.AddScoped<AnnotationaryDbContext>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -44,9 +57,6 @@ namespace Jso.Annotationary.API
                               .AllowCredentials();
                     });
             });
-
-            builder.Services.AddInfrastructure(builder.Configuration);
-            builder.Services.AddApplication();
 
             // Middleware pipeline
             var app = builder.Build();

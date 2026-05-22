@@ -66,5 +66,10 @@ namespace Jso.Annotationary.Infrastructure.Repositories
 
             return user != null && user.UserStatus == UserStatus.Active;
         }
+
+        public Task SaveChangeAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -15,12 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Projects\" />
-    <Folder Include="Users\Commands\DeleteUser\" />
+    <ProjectReference Include="..\Jso.Annotationary.Domain\Jso.Annotationary.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Jso.Annotationary.Domain\Jso.Annotationary.Domain.csproj" />
+    <Folder Include="Mappings\" />
   </ItemGroup>
 
 </Project>

@@ -10,6 +10,7 @@ namespace Jso.Annotationary.Domain.Interfaces
         Task AddAsync(User user);
         Task UpdateAsync(User user);
         Task DeleteAsync(Guid id);
+        Task SaveChangeAsync();
         Task<bool> CheckEmailExistsAsync(string email);
         Task<bool> CheckIsUserActiveAsync(Guid userId);
     }
