@@ -24,6 +24,14 @@ namespace Jso.Annotationary.Infrastructure.Context
         {
             base.OnModelCreating(modelBuilder);
             
+            // Store these Enums as strings in the database
+            modelBuilder.Entity<User>()
+                .Property(u => u.UserStatus)
+                .HasConversion<string>();
+            modelBuilder.Entity<User>()
+                .Property(u => u.UserRole)
+                .HasConversion<string>();
+            
             // User -> ProjectMembers
             modelBuilder.Entity<ProjectMember>()
                 .HasOne(pm => pm.User)

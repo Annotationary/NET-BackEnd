@@ -1,4 +1,5 @@
-﻿using Jso.Annotationary.Application.DTOs.User;
+﻿using AutoMapper;
+using Jso.Annotationary.Application.DTOs.User;
 using Jso.Annotationary.Application.Interfaces;
 using Jso.Annotationary.Domain.Interfaces;
 using Jso.Annotationary.Domain.Entities;
@@ -15,32 +16,35 @@ namespace Jso.Annotationary.Application.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository,  IMapper mapper)
         {
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         // Manual mapping method to convert User entity to UserResponseDto
-        private UserResponseDto MapToResponse(User user)
-        {
-            return new UserResponseDto
-            {
-                UserId = user.UserId,
-                Username = user.Username,
-                Email = user.Email,
-                AvatarUrl = user.AvatarUrl,
-                CoverImageUrl = user.CoverImageUrl,
-                Specialization = user.Specialization,
-                UserStatus = user.UserStatus,
-                UserRole = user.UserRole,
-                CreatedAt = user.CreatedAt
-            };
-        }
+        // private UserResponseDto MapToResponse(User user)
+        // {
+        //     return new UserResponseDto
+        //     {
+        //         UserId = user.UserId,
+        //         Username = user.Username,
+        //         Email = user.Email,
+        //         AvatarUrl = user.AvatarUrl,
+        //         CoverImageUrl = user.CoverImageUrl,
+        //         Specialization = user.Specialization,
+        //         UserStatus = user.UserStatus,
+        //         UserRole = user.UserRole,
+        //         CreatedAt = user.CreatedAt
+        //     };
+        // }
 
-        public Task AddAsync(CreateUserDto createUserDto)
+        public async Task AddAsync(CreateUserDto createUserDto)
         {
-            throw new NotImplementedException();
+            var user = _mapper.Map<CreateUserDto, User>(createUserDto);
+            await _userRepository.AddAsync(user);
         }
 
         public Task DeleteAsync(Guid id)
@@ -51,17 +55,33 @@ namespace Jso.Annotationary.Application.Services
         public async Task<IEnumerable<UserResponseDto>> GetAllAsync()
         {
             var users = await _userRepository.GetAllAsync();
-            return users.Select(MapToResponse).ToList();
+            return _mapper.Map<IEnumerable<UserResponseDto>>(users);
         }
 
-        public Task<UserResponseDto> GetByIdAsync(Guid id)
+        public async Task<UserResponseDto> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var user = await _userRepository.GetByIdAsync(id);
+
+            if (user == null)
+            {
+                return null;
+            }
+            
+            return _mapper.Map<UserResponseDto>(user);
         }
 
-        public Task UpdateAsync(Guid id, UpdateUserDto updateUserDto)
+        public async Task UpdateAsync(Guid id, UpdateUserDto updateUserDto)
         {
-            throw new NotImplementedException();
+            var user = _userRepository.GetByIdAsync(id);
+            
+            if (user == null)
+            {
+                throw new Exception($"User with id {id} not found");
+            }
+            
+            _mapper.Map(updateUserDto, user);
+
+            await _userRepository.SaveChangeAsync();
         }
     }
 }

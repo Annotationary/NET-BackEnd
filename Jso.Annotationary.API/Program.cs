@@ -19,17 +19,17 @@ namespace Jso.Annotationary.API
             // =============================
             // Services configuration
             // =============================
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+                });
             
             // DbContext
+            var connectionString = builder.Configuration.GetConnectionString("Default");
             builder.Services.AddDbContext<AnnotationaryDbContext>(options => 
-                options.UseMySql(
-                    builder.Configuration.GetConnectionString("Development"),
-                    ServerVersion.AutoDetect(
-                        builder.Configuration.GetConnectionString("Development")
-                        )
-                    )
-                );
+                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+            );
             
             // Swagger
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -63,12 +63,15 @@ namespace Jso.Annotationary.API
             // Dependency Injection
             builder.Services.AddScoped<AnnotationaryDbContext>();
             
+            // Register AutoMapper
+            builder.Services.AddAutoMapper(cfg => {}, typeof(UserService).Assembly);
+            
             // Register services
             builder.Services.AddScoped<IUserService, UserService>();
             
             // Register repositories
             builder.Services.AddScoped<IUserRepository, UserRepository>();
-
+            
             // =============================
             // Middleware pipeline
             // =============================

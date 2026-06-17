@@ -1,4 +1,6 @@
-﻿using Jso.Annotationary.Application.Interfaces;
+﻿using Jso.Annotationary.Application.DTOs.User;
+using Jso.Annotationary.Application.Interfaces;
+using Jso.Annotationary.Domain.Response;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Jso.Annotationary.API.Controllers
@@ -24,6 +26,25 @@ namespace Jso.Annotationary.API.Controllers
         public async Task<IActionResult> GetAll()
         {
             var users = await _userService.GetAllAsync();
+
+            var response = ApiResponse<IEnumerable<UserResponseDto>>.Success(
+                data: users,
+                message: "Users retrieved successfully"
+            );
+            
+            return Ok(response);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var users = await _userService.GetByIdAsync(id);
+
+            if (users == null)
+            {
+                return NotFound();
+            }
+            
             return Ok(users);
         }
     }
