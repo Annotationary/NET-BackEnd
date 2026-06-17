@@ -22,6 +22,9 @@ namespace Jso.Annotationary.API.Controllers
             _userService = userService;
         }
 
+        // ==============================================================
+        // Get all users
+        // ==============================================================
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -35,6 +38,9 @@ namespace Jso.Annotationary.API.Controllers
             return Ok(response);
         }
 
+        // ==============================================================
+        // Get user by id
+        // ==============================================================
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
@@ -42,10 +48,21 @@ namespace Jso.Annotationary.API.Controllers
 
             if (users == null)
             {
-                return NotFound();
+                var errorResponse = ApiResponse<UserResponseDto>.Failure(
+                    errors: new List<string> { $"User with ID {id} was not found." },
+                    message: "User not found",
+                    statusCode: 404
+                );
+                
+                return NotFound(errorResponse);
             }
+
+            var successResponse = ApiResponse<UserResponseDto>.Success(
+                data: users,
+                message: "User retrieved successfully"
+            );
             
-            return Ok(users);
+            return Ok(successResponse);
         }
     }
 }
