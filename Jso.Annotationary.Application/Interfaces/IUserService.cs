@@ -1,4 +1,5 @@
 ﻿using Jso.Annotationary.Application.DTOs.User;
+using Jso.Annotationary.Domain.Response;
 
 namespace Jso.Annotationary.Application.Interfaces
 {
@@ -10,9 +11,9 @@ namespace Jso.Annotationary.Application.Interfaces
     public interface IUserService
     {
         Task<IEnumerable<UserResponseDto>> GetAllAsync();
-        Task<UserResponseDto> GetByIdAsync(Guid id);
-        Task AddAsync(CreateUserDto createUserDto);
-        Task UpdateAsync(Guid id, UpdateUserDto updateUserDto);
-        Task DeleteAsync(Guid id);
+        Task<Result<UserResponseDto>> GetByIdAsync(Guid id);
+        Task<Result> AddAsync(CreateUserDto createUserDto);
+        Task<Result> UpdateAsync(Guid id, UpdateUserDto updateUserDto);
+        Task<Result> DeleteAsync(Guid id);
     }
 }

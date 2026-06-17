@@ -25,7 +25,7 @@ namespace Jso.Annotationary.Domain.Interfaces
         
         Task SaveChangeAsync();
         
-        Task<bool> CheckEmailExistsAsync(string email);
+        Task<User> GetByEmailAsync(string email);
         
         Task<bool> CheckIsUserActiveAsync(Guid userId);
     }

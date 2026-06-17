@@ -68,10 +68,10 @@ namespace Jso.Annotationary.Infrastructure.Repositories
         }
         
         // Check if current email exists
-        public async Task<bool> CheckEmailExistsAsync(string email)
+        public async Task<User> GetByEmailAsync(string email)
         {
             return await _context.Users
-                .AnyAsync(u => u.Email == email);
+                .FirstOrDefaultAsync(u => u.Email == email);
         }
 
         // Check if current user is active or not

@@ -1,8 +1,10 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Jso.Annotationary.Application.DTOs.User;
 using Jso.Annotationary.Application.Interfaces;
 using Jso.Annotationary.Domain.Interfaces;
 using Jso.Annotationary.Domain.Entities;
+using Jso.Annotationary.Domain.Errors;
+using Jso.Annotationary.Domain.Response;
 
 namespace Jso.Annotationary.Application.Services
 {
@@ -24,64 +26,90 @@ namespace Jso.Annotationary.Application.Services
             _mapper = mapper;
         }
 
-        // Manual mapping method to convert User entity to UserResponseDto
-        // private UserResponseDto MapToResponse(User user)
-        // {
-        //     return new UserResponseDto
-        //     {
-        //         UserId = user.UserId,
-        //         Username = user.Username,
-        //         Email = user.Email,
-        //         AvatarUrl = user.AvatarUrl,
-        //         CoverImageUrl = user.CoverImageUrl,
-        //         Specialization = user.Specialization,
-        //         UserStatus = user.UserStatus,
-        //         UserRole = user.UserRole,
-        //         CreatedAt = user.CreatedAt
-        //     };
-        // }
-
-        public async Task AddAsync(CreateUserDto createUserDto)
+        // ==============================================================
+        // Add new user service
+        // ==============================================================
+        public async Task<Result> AddAsync(CreateUserDto createUserDto)
         {
-            var user = _mapper.Map<CreateUserDto, User>(createUserDto);
+            var existingUser = await _userRepository.GetByEmailAsync(createUserDto.Email);
+
+            if (existingUser != null)
+            {
+                return Result.Failure(
+                    DomainErrors.User.EmailInUse
+                );
+            }
+            
+            var user = _mapper.Map<User>(createUserDto);
             await _userRepository.AddAsync(user);
+            return  Result.Success();
         }
 
-        public Task DeleteAsync(Guid id)
+        // ==============================================================
+        // Remove user service
+        // ==============================================================
+        public async Task<Result> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var existingUser = await _userRepository.GetByIdAsync(id);
+
+            if (existingUser == null)
+            {
+                return Result.Failure(
+                    DomainErrors.User.NotFound
+                );
+            }
+            
+            await _userRepository.DeleteAsync(id);
+            return Result.Success();
         }
 
+        // ==============================================================
+        // Get all user service
+        // ==============================================================
         public async Task<IEnumerable<UserResponseDto>> GetAllAsync()
         {
             var users = await _userRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<UserResponseDto>>(users);
         }
 
-        public async Task<UserResponseDto> GetByIdAsync(Guid id)
+        // ==============================================================
+        // Get user by id service
+        // ==============================================================
+        public async Task<Result<UserResponseDto>> GetByIdAsync(Guid id)
         {
             var user = await _userRepository.GetByIdAsync(id);
 
             if (user == null)
             {
-                return null;
+                return Result<UserResponseDto>.Failure(
+                    DomainErrors.User.NotFound
+                );
             }
             
-            return _mapper.Map<UserResponseDto>(user);
+            return Result<UserResponseDto>.Success(
+                    _mapper.Map<UserResponseDto>(user)
+                );
         }
 
-        public async Task UpdateAsync(Guid id, UpdateUserDto updateUserDto)
+        // ==============================================================
+        // Update user service
+        // ==============================================================
+        public async Task<Result> UpdateAsync(Guid id, UpdateUserDto updateUserDto)
         {
-            var user = _userRepository.GetByIdAsync(id);
+            var user = await _userRepository.GetByIdAsync(id);
             
             if (user == null)
             {
-                throw new Exception($"User with id {id} not found");
+                return Result.Failure(
+                    DomainErrors.User.NotFound
+                );
             }
             
             _mapper.Map(updateUserDto, user);
 
-            await _userRepository.SaveChangeAsync();
+            await _userRepository.UpdateAsync(user);
+            
+            return Result.Success();
         }
     }
 }

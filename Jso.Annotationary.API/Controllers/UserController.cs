@@ -1,4 +1,4 @@
-﻿using Jso.Annotationary.Application.DTOs.User;
+using Jso.Annotationary.Application.DTOs.User;
 using Jso.Annotationary.Application.Interfaces;
 using Jso.Annotationary.Domain.Response;
 using Microsoft.AspNetCore.Mvc;
@@ -44,24 +44,79 @@ namespace Jso.Annotationary.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var users = await _userService.GetByIdAsync(id);
+            var result = await _userService.GetByIdAsync(id);
 
-            if (users == null)
+            if (result.IsFailure)
             {
-                var errorResponse = ApiResponse<UserResponseDto>.Failure(
-                    errors: new List<string> { $"User with ID {id} was not found." },
-                    message: "User not found",
-                    statusCode: 404
+                return NotFound(
+                    ApiResponse<UserResponseDto>.Failure(
+                        errors: new List<string> { result.Error.Message },
+                        message: "User not found",
+                        statusCode: 404
+                    )
                 );
-                
-                return NotFound(errorResponse);
+            }
+            
+            return Ok(
+                ApiResponse<UserResponseDto>.Success(
+                    data: result.Value,
+                    message: "User retrieved successfully"
+                )
+            );
+        }
+        
+        // ==============================================================
+        // Create new user
+        // ==============================================================
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateUserDto createUserDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return BadRequest(ApiResponse<object>.Failure(errors, "Validation failed", 400));
             }
 
-            var successResponse = ApiResponse<UserResponseDto>.Success(
-                data: users,
-                message: "User retrieved successfully"
-            );
+            await _userService.AddAsync(createUserDto);
             
+            var successResponse = ApiResponse<object>.Success(null, "User created successfully", 201);
+            return StatusCode(201, successResponse);
+        }
+
+        // ==============================================================
+        // Update user
+        // ==============================================================
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserDto updateUserDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return BadRequest(ApiResponse<object>.Failure(errors, "Validation failed", 400));
+            }
+
+            try
+            {
+                await _userService.UpdateAsync(id, updateUserDto);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ApiResponse<object>.Failure(new List<string> { ex.Message }, "User not found", 404));
+            }
+
+            var successResponse = ApiResponse<object>.Success(null, "User updated successfully");
+            return Ok(successResponse);
+        }
+
+        // ==============================================================
+        // Delete user
+        // ==============================================================
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await _userService.DeleteAsync(id);
+            
+            var successResponse = ApiResponse<object>.Success(null, "User deleted successfully");
             return Ok(successResponse);
         }
     }
