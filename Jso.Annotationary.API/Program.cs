@@ -24,9 +24,9 @@ namespace Jso.Annotationary.API
             // DbContext
             builder.Services.AddDbContext<AnnotationaryDbContext>(options => 
                 options.UseMySql(
-                    builder.Configuration.GetConnectionString("Default"),
+                    builder.Configuration.GetConnectionString("Development"),
                     ServerVersion.AutoDetect(
-                        builder.Configuration.GetConnectionString("Default")
+                        builder.Configuration.GetConnectionString("Development")
                         )
                     )
                 );
