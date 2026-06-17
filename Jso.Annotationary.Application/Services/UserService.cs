@@ -5,6 +5,13 @@ using Jso.Annotationary.Domain.Entities;
 
 namespace Jso.Annotationary.Application.Services
 {
+    /// <summary>
+    ///
+    /// The UserService is the concrete class inside the Application project that implements the IUserService interface.
+    /// It contains the actual business logic for your use cases, acting as the coordinator that ties your repositories,
+    /// domain rules, mapping profiles, and DTOs together.
+    /// 
+    /// </summary>
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;

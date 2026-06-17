@@ -3,6 +3,15 @@ using Jso.Annotationary.Domain.Response;
 
 namespace Jso.Annotationary.API.Middleware;
 
+/// <summary>
+///
+/// The GlobalExceptionMiddleware inside the API project is a centralized request-handling component that intercepts any
+/// unhandled exceptions thrown across your application.
+///
+/// Instead of letting the application crash or exposing raw, dangerous stack traces to the client, this middleware catches
+/// the error, logs it, and formats it into a clean, standardized API Response.
+/// 
+/// </summary>
 public class GlobalExceptionMiddleware
 {
     private readonly RequestDelegate _next;

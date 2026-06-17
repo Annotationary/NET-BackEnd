@@ -18,8 +18,4 @@
     <ProjectReference Include="..\Jso.Annotationary.Domain\Jso.Annotationary.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Mappings\" />
-  </ItemGroup>
-
 </Project>

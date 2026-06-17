@@ -2,6 +2,11 @@
 
 namespace Jso.Annotationary.Application.Interfaces
 {
+    /// <summary>
+    ///
+    /// An interface that defines the core use cases and business operations available for managing users.
+    /// 
+    /// </summary>
     public interface IUserService
     {
         Task<IEnumerable<UserResponseDto>> GetAllAsync();

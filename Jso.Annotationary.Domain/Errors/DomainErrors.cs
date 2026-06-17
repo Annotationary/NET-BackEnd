@@ -2,9 +2,14 @@ using Jso.Annotationary.Domain.Response;
 
 namespace Jso.Annotationary.Domain.Errors;
 
+/// <summary>
+///
+/// All validations error message will be defined here
+/// 
+/// </summary>
 public static class DomainErrors
 {
-    // All user error define here
+    // User errors
     public static class User
     {
         public static readonly Error EmailInUse = new(
@@ -20,7 +25,7 @@ public static class DomainErrors
             "User has been active in the system.");
     }
 
-    // All project error define here
+    // Project errors
     public static class Project
     {
         public static readonly Error NotFound = new(

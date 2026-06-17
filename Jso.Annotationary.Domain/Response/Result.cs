@@ -1,8 +1,10 @@
 namespace Jso.Annotationary.Domain.Response;
 
 /// <summary>
+/// 
 /// Only use Exception for "unexpected incident" (like server crash). For business error
 /// like "Email exist", "Password too short" we use Result Pattern
+/// 
 /// </summary>
 
 public class Result

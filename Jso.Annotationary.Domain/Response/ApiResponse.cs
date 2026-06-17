@@ -1,5 +1,13 @@
 namespace Jso.Annotationary.Domain.Response;
 
+/// <summary>
+/// 
+/// An API response is the structured data or confirmation returned by a server to a client application after receiving
+/// and processing an API request. It serves as the digital answer or receipt indicating whether the action succeeded or
+/// failed, and it delivers any requested data.
+/// 
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public class ApiResponse<T>
 {
     public int StatusCode { get; set; }
