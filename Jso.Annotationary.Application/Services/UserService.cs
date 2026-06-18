@@ -29,20 +29,24 @@ namespace Jso.Annotationary.Application.Services
         // ==============================================================
         // Add new user service
         // ==============================================================
-        public async Task<Result> AddAsync(CreateUserDto createUserDto)
+        public async Task<Result<UserResponseDto>> AddAsync(CreateUserDto createUserDto)
         {
             var existingUser = await _userRepository.GetByEmailAsync(createUserDto.Email);
 
             if (existingUser != null)
             {
-                return Result.Failure(
+                return Result<UserResponseDto>.Failure(
                     DomainErrors.User.EmailInUse
                 );
             }
             
             var user = _mapper.Map<User>(createUserDto);
+            
             await _userRepository.AddAsync(user);
-            return  Result.Success();
+            
+            return  Result<UserResponseDto>.Success(
+                _mapper.Map<UserResponseDto>(user)
+            );
         }
 
         // ==============================================================
@@ -94,22 +98,24 @@ namespace Jso.Annotationary.Application.Services
         // ==============================================================
         // Update user service
         // ==============================================================
-        public async Task<Result> UpdateAsync(Guid id, UpdateUserDto updateUserDto)
+        public async Task<Result<UserResponseDto>> UpdateAsync(Guid id, UpdateUserDto updateUserDto)
         {
             var user = await _userRepository.GetByIdAsync(id);
             
             if (user == null)
             {
-                return Result.Failure(
+                return Result<UserResponseDto>.Failure(
                     DomainErrors.User.NotFound
                 );
             }
             
-            _mapper.Map(updateUserDto, user);
+            _mapper.Map<UpdateUserDto>(user);
 
             await _userRepository.UpdateAsync(user);
             
-            return Result.Success();
+            return Result<UserResponseDto>.Success(
+                _mapper.Map<UserResponseDto>(user)
+            );
         }
     }
 }

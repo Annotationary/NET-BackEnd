@@ -26,7 +26,7 @@ namespace Jso.Annotationary.API
                 });
             
             // DbContext
-            var connectionString = builder.Configuration.GetConnectionString("Default");
+            var connectionString = builder.Configuration.GetConnectionString("Dev");
             builder.Services.AddDbContext<AnnotationaryDbContext>(options => 
                 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
             );

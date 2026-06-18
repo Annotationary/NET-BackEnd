@@ -71,16 +71,28 @@ namespace Jso.Annotationary.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateUserDto createUserDto)
         {
-            if (!ModelState.IsValid)
+            var result = await _userService.AddAsync(createUserDto);
+
+            if (result.IsFailure)
             {
-                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                return BadRequest(ApiResponse<object>.Failure(errors, "Validation failed", 400));
+                return Conflict(
+                    ApiResponse<UserResponseDto>.Failure(
+                        errors: new List<string> { result.Error.Message },
+                        message: "User exists",
+                        statusCode: 409
+                    )
+                );
             }
 
-            await _userService.AddAsync(createUserDto);
-            
-            var successResponse = ApiResponse<object>.Success(null, "User created successfully", 201);
-            return StatusCode(201, successResponse);
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = result.Value.UserId },
+                ApiResponse<UserResponseDto>.Success(
+                    data: result.Value,
+                    message: "User created successfully",
+                    statusCode: 201
+                )
+            );
         }
 
         // ==============================================================
@@ -114,10 +126,26 @@ namespace Jso.Annotationary.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _userService.DeleteAsync(id);
-            
-            var successResponse = ApiResponse<object>.Success(null, "User deleted successfully");
-            return Ok(successResponse);
+            var result = await _userService.DeleteAsync(id);
+
+            if (result.IsFailure)
+            {
+                return NotFound(
+                    ApiResponse<UserResponseDto>.Failure(
+                        errors: new List<string> { result.Error.Message },
+                        message: "User not found",
+                        statusCode: 404
+                    )
+                );
+            }
+
+            return Ok(
+                ApiResponse<UserResponseDto>.Success(
+                    data: null,
+                    message: "User removed successfully",
+                    statusCode: 200
+                )
+            );
         }
     }
 }

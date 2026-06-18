@@ -12,8 +12,8 @@ namespace Jso.Annotationary.Application.Interfaces
     {
         Task<IEnumerable<UserResponseDto>> GetAllAsync();
         Task<Result<UserResponseDto>> GetByIdAsync(Guid id);
-        Task<Result> AddAsync(CreateUserDto createUserDto);
-        Task<Result> UpdateAsync(Guid id, UpdateUserDto updateUserDto);
+        Task<Result<UserResponseDto>> AddAsync(CreateUserDto createUserDto);
+        Task<Result<UserResponseDto>> UpdateAsync(Guid id, UpdateUserDto updateUserDto);
         Task<Result> DeleteAsync(Guid id);
     }
 }
