@@ -16,7 +16,7 @@ namespace Jso.Annotationary.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-
+    
         public UserController(IUserService userService)
         {
             _userService = userService;
@@ -101,23 +101,26 @@ namespace Jso.Annotationary.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserDto updateUserDto)
         {
-            if (!ModelState.IsValid)
+            var result =  await _userService.UpdateAsync(id, updateUserDto);
+
+            if (result.IsFailure)
             {
-                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                return BadRequest(ApiResponse<object>.Failure(errors, "Validation failed", 400));
+                return NotFound(
+                    ApiResponse<UserResponseDto>.Failure(
+                        errors: new List<string> { result.Error.Message },
+                        message: "User not found",
+                        statusCode: 404
+                    )
+                );
             }
 
-            try
-            {
-                await _userService.UpdateAsync(id, updateUserDto);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ApiResponse<object>.Failure(new List<string> { ex.Message }, "User not found", 404));
-            }
-
-            var successResponse = ApiResponse<object>.Success(null, "User updated successfully");
-            return Ok(successResponse);
+            return Ok(
+                ApiResponse<UserResponseDto>.Success(
+                    data: null,
+                    message: "User updated successfully",
+                    statusCode: 200
+                )
+            );
         }
 
         // ==============================================================
