@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Jso.Annotationary.Infrastructure.Migrations
 {
     [DbContext(typeof(AnnotationaryDbContext))]
-    [Migration("20260617103933_Init")]
-    partial class Init
+    [Migration("20260708045156_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -103,11 +103,13 @@ namespace Jso.Annotationary.Infrastructure.Migrations
                     b.Property<string>("Specialization")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("UserRole")
-                        .HasColumnType("int");
+                    b.Property<string>("UserRole")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
-                    b.Property<int>("UserStatus")
-                        .HasColumnType("int");
+                    b.Property<string>("UserStatus")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Username")
                         .IsRequired()
