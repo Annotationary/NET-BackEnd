@@ -36,7 +36,7 @@ node {
 //        def deployBeta = load "ci/deploy-beta.groovy"
         def deployDev = load "ci/deploy-dev.groovy"
 
-        def updateManifest = load "ci/update-manifest.groovy"
+//        def updateManifest = load "ci/update-manifest.groovy"
 
         // Call functions base on branch
         if (env.BRANCH_NAME == "main") {
