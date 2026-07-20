@@ -1,8 +1,9 @@
 def call(config) {
-    String image = "${config.harborURL}/${config.harborProject}/${config.appName}"
-
-    // Version tags
+    String image = "${config.appName}"
+    def dockerImage
     String version
+    def securityLevel
+
     if (env.BRANCH_NAME == 'main') {
         version = "${config.release}-release.${env.BUILD_NUMBER}b" // 1.1.2-release.78b
     } else if (env.BRANCH_NAME == 'develop') {
@@ -13,12 +14,12 @@ def call(config) {
 
     stage('Docker Build') {
         echo "Building Docker image: ${imageTagged}"
-        docker.build("${imageTagged}")
+        dockerImage = docker.build("${imageTagged}", "-f Jso.Annotationary.API/Dockerfile .")
     }
 
     stage('Trivy Docker Image Scan') {
             script {
-                def securityLevel = env.BRANCH_NAME == 'main' ? 'HIGH,CRITICAL' : 'CRITICAL'
+                securityLevel = env.BRANCH_NAME == 'main' ? 'HIGH,CRITICAL' : 'CRITICAL'
 
                 sh """
                     trivy image --no-progress \
@@ -77,6 +78,8 @@ def call(config) {
             credentialsId: 'docker_harbor_login',
             url: 'https://harbor.homelab'
         ) {
+            dockerImage =
+
             if (env.BRANCH_NAME == 'main') {
                 dockerImage.push()         // version tag
                 dockerImage.push('release-latest') // production latest
