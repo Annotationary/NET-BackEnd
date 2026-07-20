@@ -27,13 +27,13 @@ node {
         ]
 
         // Env variables
-        def buildPipeline = load "ci/build.groovy"
+//        def buildPipeline = load "ci/build.groovy"
         def sonarqubePipeline = load "ci/sonarqube.groovy"
 //        def trivyFilesystemScan = load "ci/trivy-filesystem-scan.groovy"
         def dockerBuildPipeline = load "ci/docker-build.groovy"
 
-        def deployProd = load "ci/deploy-prod.groovy"
-        def deployBeta = load "ci/deploy-beta.groovy"
+//        def deployProd = load "ci/deploy-prod.groovy"
+//        def deployBeta = load "ci/deploy-beta.groovy"
         def deployDev = load "ci/deploy-dev.groovy"
 
         def updateManifest = load "ci/update-manifest.groovy"
