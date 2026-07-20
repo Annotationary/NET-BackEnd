@@ -83,9 +83,7 @@ def call(config) {
                 dockerImage.push('release-latest') // production latest
             } else if (env.BRANCH_NAME == 'develop') {
                 dockerImage.push()            // version tag
-                dockerImage.push('beta-latest') // beta latest
-            } else {
-                dockerImage.push('dev-latest') // dev latest
+                dockerImage.push('dev-latest') // dev latest // beta latest
             }
         }
     }
