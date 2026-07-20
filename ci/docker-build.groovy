@@ -78,8 +78,6 @@ def call(config) {
             credentialsId: 'docker_harbor_login',
             url: 'https://harbor.homelab'
         ) {
-            dockerImage =
-
             if (env.BRANCH_NAME == 'main') {
                 dockerImage.push()         // version tag
                 dockerImage.push('release-latest') // production latest
