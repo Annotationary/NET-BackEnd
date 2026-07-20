@@ -7,7 +7,7 @@ node {
         // Configs
         def config = [
             appName: 'annotationary-be',
-            harborURL='harbor.homelab'
+            harborURL='harbor.homelab',
             harborProject: 'annotationary',
 
             release: '1.0.0',
