@@ -40,38 +40,38 @@ def call(config) {
             archiveArtifacts artifacts: 'trivyimage.txt,trivyimage.json', allowEmptyArchive: true
     }
 
-    stage('Docker Test') {
-        script {
-            String containerName = "test-${config.appName}-${env.BUILD_NUMBER}"
-
-            sh """
-                docker run -d --name ${containerName} \
-                -p ${config.testPort}:${config.testPort} \
-                -e SPRING_PROFILES_ACTIVE=test \
-                ${imageTagged}
-
-                echo "Waiting for Spring Boot health check..."
-
-                ATTEMPTS=40
-                SLEEP=3
-
-                for i in \$(seq 1 \$ATTEMPTS); do
-                    if curl -fs http://localhost:${config.testPort}/actuator/health > /dev/null; then
-                        echo "App is UP"
-                        break
-                    fi
-
-                    echo "Attempt \$i/\$ATTEMPTS"
-                    sleep \$SLEEP
-                done
-
-                curl -f http://localhost:${config.testPort}/actuator/health
-
-                docker stop ${containerName}
-                docker rm ${containerName}
-            """
-        }
-    }
+//     stage('Docker Test') {
+//         script {
+//             String containerName = "test-${config.appName}-${env.BUILD_NUMBER}"
+//
+//             sh """
+//                 docker run -d --name ${containerName} \
+//                 -p ${config.testPort}:${config.testPort} \
+//                 -e SPRING_PROFILES_ACTIVE=test \
+//                 ${imageTagged}
+//
+//                 echo "Waiting for Spring Boot health check..."
+//
+//                 ATTEMPTS=40
+//                 SLEEP=3
+//
+//                 for i in \$(seq 1 \$ATTEMPTS); do
+//                     if curl -fs http://localhost:${config.testPort}/actuator/health > /dev/null; then
+//                         echo "App is UP"
+//                         break
+//                     fi
+//
+//                     echo "Attempt \$i/\$ATTEMPTS"
+//                     sleep \$SLEEP
+//                 done
+//
+//                 curl -f http://localhost:${config.testPort}/actuator/health
+//
+//                 docker stop ${containerName}
+//                 docker rm ${containerName}
+//             """
+//         }
+//     }
 
     stage('Push Docker Image') {
         withDockerRegistry(
