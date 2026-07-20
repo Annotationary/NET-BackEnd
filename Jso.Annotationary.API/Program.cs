@@ -1,5 +1,10 @@
 
+using Jso.Annotationary.API.Middleware;
+using Jso.Annotationary.Application.Interfaces;
+using Jso.Annotationary.Application.Services;
+using Jso.Annotationary.Domain.Interfaces;
 using Jso.Annotationary.Infrastructure.Context;
+using Jso.Annotationary.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -10,10 +15,23 @@ namespace Jso.Annotationary.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
-
-            builder.Services.AddControllers();
+            
+            // =============================
+            // Services configuration
+            // =============================
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+                });
+            
+            // DbContext
+            var connectionString = builder.Configuration.GetConnectionString("Default");
+            builder.Services.AddDbContext<AnnotationaryDbContext>(options => 
+                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+            );
+            
+            // Swagger
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options => {
@@ -24,20 +42,7 @@ namespace Jso.Annotationary.API
                     Description = "Clean Architecture API"
                 });
             });
-
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI(options =>
-                {
-                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Annotationary v1");
-                    options.RoutePrefix = string.Empty; // mở thẳng tại root "/"
-                });
-            }
-
+            
             // CORS
             builder.Services.AddCors(options =>
             {
@@ -48,27 +53,51 @@ namespace Jso.Annotationary.API
                                 "http://localhost:5173",
                                 "http://localhost:3000",
                                 "http://localhost:5174"
-                              )
-                              .AllowAnyMethod()
-                              .AllowAnyHeader()
-                              .AllowCredentials();
+                            )
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials();
                     });
             });
+            
+            // Dependency Injection
+            builder.Services.AddScoped<AnnotationaryDbContext>();
+            
+            // Register AutoMapper
+            builder.Services.AddAutoMapper(cfg => {}, typeof(UserService).Assembly);
+            
+            // Register services
+            builder.Services.AddScoped<IUserService, UserService>();
+            
+            // Register repositories
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            
+            // =============================
+            // Middleware pipeline
+            // =============================
+            var app = builder.Build();
+            
+            app.UseMiddleware<GlobalExceptionMiddleware>();
+            
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(options =>
+                {
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Annotationary v1");
+                    options.RoutePrefix = string.Empty; // mở thẳng tại root "/"
+                });
+            }
+            
+            // if (!app.Environment.IsDevelopment())
+            // {
+            //     app.UseHttpsRedirection();
+            // }
 
-            // DbConext injection
-            var connectionString = builder.Configuration.GetConnectionString("Default");
-            var serverVersion = ServerVersion.AutoDetect(connectionString);
-
-            builder.Services.AddDbContext<AnnotationaryDbContext>(options =>
-                options.UseMySql(connectionString, serverVersion));
-
-            app.UseHttpsRedirection();
-
+            app.UseCors("AllowVite");
             app.UseAuthorization();
-
-
             app.MapControllers();
-
             app.Run();
         }
     }

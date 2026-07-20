@@ -1,10 +1,5 @@
 ﻿using Jso.Annotationary.Domain.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jso.Annotationary.Domain.Entities
 {
@@ -14,12 +9,13 @@ namespace Jso.Annotationary.Domain.Entities
         public Guid UserId { get; set; }
 
         [Required]
-        public string? Username { get; set; }
+        public string Username { get; set; }
 
         [Required]
-        public string? Email { get; set; }
+        public string Email { get; set; }
 
-        public string? Password { get; set; }
+        [Required]
+        public string Password { get; set; }
 
         public string? AvatarUrl { get; set; }
 
@@ -32,5 +28,9 @@ namespace Jso.Annotationary.Domain.Entities
         public UserRole UserRole { get; set; } = UserRole.ANNOTATOR;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public ICollection<Project> Projects { get; set; } = new List<Project>();
+
+        public ICollection<ProjectMember> ProjectMembers { get; set; } = new List<ProjectMember>();
     }
 }

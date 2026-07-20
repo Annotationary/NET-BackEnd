@@ -1,0 +1,65 @@
+﻿volumes:
+  mysql_data:
+  volume_data:
+
+services:
+  
+  # ========================================
+  # API
+  # ========================================
+  annotationary.api:
+    image: jso.annotationary.api
+    build:
+      context: .
+      dockerfile: Jso.Annotationary.API/Dockerfile
+    dns: 
+      - "10.0.1.91"
+    ports:
+      - "32770:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    
+  # ========================================
+  # MySQL Server
+  # ========================================
+#  mysql:
+#    image: mysql:8.4
+#    environment:
+#      MYSQL_DATABASE: annotationary
+#      MYSQL_ROOT_PASSWORD: TMNNT012928637160822863716
+#    ports:
+#      - "3307:3306"
+
+  # ========================================
+  # SeaweedFS
+  # ========================================
+#  seaweed-master:
+#    image: chrislusf/seaweedfs
+#    container_name: seaweed-master
+#    command: master -ip=seaweed-master -port=9333
+#    ports:
+#      - "9333:9333"
+#  
+#  seaweed-volume:
+#    image: chrislusf/seaweedfs
+#    container_name: seaweed-volume
+#    command: >
+#      volume
+#      -mserver="seaweed-master:9333"
+#      -port=8080
+#      -publicUrl=seaweed.hikarimoon.pro:8080
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - seaweed-master
+#    volumes:
+#      - volume_data:/data
+#
+#  seaweed-filer:
+#    image: chrislusf/seaweedfs
+#    container_name: seaweed-filer
+#    command: filer -master="seaweed-master:9333"
+#    ports:
+#      - "8888:8888"
+#    depends_on:
+#      - seaweed-master
